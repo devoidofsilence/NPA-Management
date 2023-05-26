@@ -1,0 +1,98 @@
+﻿@model IEnumerable<NPAManagement.Models.NPAManagementMain>
+
+@{
+    ViewBag.Title = "NPAManagementList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<p>
+    @Html.ActionLink("Create New", "NPAManagementCreate")
+</p>
+<h2 style="color:green">@ViewBag.SuccessMessage</h2>
+<h2 style="color:red">@ViewBag.ErrorMessage</h2>
+<div class="table table-responsive">
+    <table class="table table-bordered table-striped" id="tblSavedNPAList">
+        <thead>
+            <tr>
+                <th style="max-width:60px">
+                    @Html.DisplayNameFor(model => model.NPAManagementId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CIFNo)
+                </th>
+                <th style="min-width:350px">
+                    @Html.DisplayNameFor(model => model.BorrowerName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BorrowerContactNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BorrowerEmailAddress)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CurrentROName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BranchLocationCode)
+                </th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NPAManagementId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CIFNo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BorrowerName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BorrowerContactNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BorrowerEmailAddress)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CurrentROName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BranchLocationCode)
+                        </td>
+                        <td>
+                            @*@if (!viewOnlyUser)
+                                {*@
+                            @Html.ActionLink("Edit", "NPAManagementEdit", new { npaManagementId = item.NPAManagementId })
+                            @*}
+                                else
+                                {
+                                    @Html.ActionLink("View", "NPAManagementEdit", new { npaManagementId = item.NPAManagementId })
+                                }*@
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" style="text-align:center">
+                        No Data Found!!
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#tblSavedNPAList").dataTable();
+        });
+    </script>
+}

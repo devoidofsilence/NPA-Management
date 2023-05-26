@@ -1,0 +1,56 @@
+﻿@using NPAManagement.ValidationFilters;
+@model NPAManagement.Models.BorrowerTypeLegalEntitiesDetail
+@if (this.ViewContext.FormContext == null)
+{
+    this.ViewContext.FormContext = new FormContext();
+}
+@{
+    bool viewOnlyUser = false;
+    if (ViewBag.ViewOnlyUser != null)
+    {
+        viewOnlyUser = (bool)ViewBag.ViewOnlyUser;
+    }
+}
+<div class="card">
+    <div class="card-header" data-toggle="collapse" data-target="#collapseBorrowerLegalEntityDetail" aria-expanded="true" aria-controls="collapseBorrowerLegalEntityDetail">
+        <h3>
+            Legal Entity's Details
+        </h3>
+    </div>
+    <div class="collapse show" id="collapseBorrowerLegalEntityDetail">
+        <div class="card-body">
+            <div class="form-row">
+                @Html.LabelFor(model => model.LegalEntityRegistrationNumber, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.LegalEntityRegistrationNumber, new { htmlAttributes = new { @class = "form-control", @data_Model = "LegalEntityRegistrationNumber" }.DisabledIf(viewOnlyUser == true) })
+                    @Html.ValidationMessageFor(model => model.LegalEntityRegistrationNumber, "", new { @class = "text-danger" })
+                </div>
+                @Html.LabelFor(model => model.LegalEntityRegisteredOffice, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.LegalEntityRegisteredOffice, new { htmlAttributes = new { @class = "form-control", @data_Model = "LegalEntityRegisteredOffice" }.DisabledIf(viewOnlyUser == true) })
+                    @Html.ValidationMessageFor(model => model.LegalEntityRegisteredOffice, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <hr />
+            <div class="form-row">
+                @Html.LabelFor(model => model.LegalEntityRegistrationDate, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.LegalEntityRegistrationDate, new { htmlAttributes = new { @class = "form-control", @data_Model = "LegalEntityRegistrationDate" }.DisabledIf(viewOnlyUser == true) })
+                    @Html.ValidationMessageFor(model => model.LegalEntityRegistrationDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".date").datepicker({
+            dateFormat: 'yy/mm/dd',
+            changeMonth: true,
+            changeYear: true
+        });
+    });
+</script>

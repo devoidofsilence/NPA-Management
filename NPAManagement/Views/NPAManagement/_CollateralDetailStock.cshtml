@@ -1,0 +1,87 @@
+﻿@using NPAManagement.ValidationFilters;
+@model NPAManagement.Models.CollateralDetailInCaseOfStock
+@if (this.ViewContext.FormContext == null)
+{
+    this.ViewContext.FormContext = new FormContext();
+}
+@{
+    bool viewOnlyUser = false;
+    if (ViewBag.ViewOnlyUser != null)
+    {
+        viewOnlyUser = (bool)ViewBag.ViewOnlyUser;
+    }
+}
+@{string idValueToAttach = $"_{new Random().Next(1000, 9999)}{new Random().Next(1000, 9999)}{new Random().Next(10000, 99999)}{new Random().Next(1000, 9999)}";}
+<div id="dvCollateralDetailStock@(idValueToAttach)">
+    <br />
+    <div class="card">
+        <div class="card-header" data-toggle="collapse" data-target="#collapseCollateralDetailStock@(idValueToAttach)" aria-expanded="true" aria-controls="collapseCollateralDetailStock@(idValueToAttach)">
+            <h3>
+                Share Collateral Detail
+            </h3>
+        </div>
+        <div class="collapse show" id="collapseCollateralDetailStock@(idValueToAttach)">
+            <div class="card-body">
+                @*@Html.HiddenFor(m => m.CollateralDetailMainId)*@
+                <div class="form-row">
+                    @Html.LabelFor(model => model.ShareTypeId, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.DropDownListFor(m => m.ShareTypeId, (IEnumerable<SelectListItem>)ViewData["ShareType"], "-- Please Select --", new { @class = "form-control ddlHandler", @data_Model = "ShareTypeId", Name = "ShareTypeId" + (idValueToAttach) }.DisabledIf(viewOnlyUser == true))
+                        @Html.ValidationMessageFor(m => m.ShareTypeId, "", new { @class = "text-danger" })
+                    </div>
+                    @Html.LabelFor(model => model.CompanyName, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.CompanyName, new { htmlAttributes = new { @class = "form-control", @data_Model = "CompanyName", Name = "CompanyName" + (idValueToAttach) }.DisabledIf(viewOnlyUser == true) })
+                        @Html.ValidationMessageFor(model => model.CompanyName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <hr />
+                <div class="form-row">
+                    @Html.LabelFor(model => model.ListedInNepseBoolId, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.DropDownListFor(m => m.ListedInNepseBoolId, (IEnumerable<SelectListItem>)ViewData["ListedInNepse"], "-- Please Select --", new { @class = "form-control ddlHandler", @data_Model = "ListedInNepseBoolId", Name = "ListedInNepseBoolId" + (idValueToAttach) }.DisabledIf(viewOnlyUser == true))
+                        @Html.ValidationMessageFor(m => m.ListedInNepseBoolId, "", new { @class = "text-danger" })
+                    </div>
+                    @Html.LabelFor(model => model.PledgedUnits, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.PledgedUnits, new { htmlAttributes = new { @class = "form-control decimalType", @data_Model = "PledgedUnits", Name = "PledgedUnits" + (idValueToAttach) }.DisabledIf(viewOnlyUser == true) })
+                        @Html.ValidationMessageFor(model => model.PledgedUnits, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <hr />
+                <div class="form-row">
+                    @Html.LabelFor(model => model.ShareUnitTypeId, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.DropDownListFor(m => m.ShareUnitTypeId, (IEnumerable<SelectListItem>)ViewData["ShareUnitType"], "-- Please Select --", new { @class = "form-control ddlHandler", @data_Model = "ShareUnitTypeId", Name = "ShareUnitTypeId" + (idValueToAttach) }.DisabledIf(viewOnlyUser == true))
+                        @Html.ValidationMessageFor(m => m.ShareUnitTypeId, "", new { @class = "text-danger" })
+                    </div>
+                    @Html.LabelFor(model => model.ValueOfShare, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.ValueOfShare, new { htmlAttributes = new { @class = "form-control decimalType", @data_Model = "ValueOfShare", Name = "ValueOfShare" + (idValueToAttach) }.DisabledIf(viewOnlyUser == true) })
+                        @Html.ValidationMessageFor(model => model.ValueOfShare, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".date").datepicker({
+            dateFormat: 'yy/mm/dd',
+            changeMonth: true,
+            changeYear: true
+        });
+
+        $('.decimalType').toArray().forEach(function (field) {
+            new Cleave(field, {
+                numeral: true,
+                numeralThousandsGroupStyle: 'thousand'
+            });
+        });
+    });
+</script>

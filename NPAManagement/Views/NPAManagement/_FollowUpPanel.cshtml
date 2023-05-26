@@ -1,0 +1,86 @@
+﻿@model NPAManagement.Models.FollowUpMain
+@if (this.ViewContext.FormContext == null)
+{
+    this.ViewContext.FormContext = new FormContext();
+}
+@{ string idValueToAttach = $"{Model.FollowUpById}_{new Random().Next(1000, 9999)}{new Random().Next(1000, 9999)}{new Random().Next(10000, 99999)}{new Random().Next(1000, 9999)}"; }
+<div id="followUp_@idValueToAttach">
+    <div class="card">
+        <div class="card-header" data-toggle="collapse" data-target="#collapseFollowUpDetail@(idValueToAttach)" aria-expanded="true" aria-controls="collapseFollowUpDetail@(idValueToAttach)">
+            <h3>
+                Follow-Up Detail
+            </h3>
+        </div>
+        <div class="collapse show collapseFollowUpDetail" id="collapseFollowUpDetail@(idValueToAttach)">
+            <div class="card-body">
+                @Html.HiddenFor(m => m.FollowUpById)
+                <div class="form-row">
+                    @Html.LabelFor(model => model.FollowUpTypeId, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.DropDownListFor(m => m.FollowUpTypeId, (IEnumerable<SelectListItem>)ViewData["FollowUpTypes"], "-- Please Select --", new { @class = "form-control followUpTypeChanger", @data_Model = "FollowUpTypeId", @id = "FollowUpTypeId" + (idValueToAttach), Name = "FollowUpTypeId" + (idValueToAttach) })
+                        @Html.ValidationMessageFor(m => m.FollowUpTypeId, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="offset-5 col-md-1">
+                        <button class="btnclsClose" type="button" onclick="if (confirm('Do you want to remove this item?')) { $('#followUp_@idValueToAttach').remove(); }">Remove</button>
+                    </div>
+                </div>
+                <div id="dvFollowUpDetail_@(idValueToAttach)" class="dvFollowUpDetailGeneral">
+                    @* Follow Up detail according to follow up type selected goes here *@
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+</div>
+@section Scripts {
+    @*@Scripts.Render("~/bundles/jquery")*@
+    @Scripts.Render("~/bundles/jqueryval")
+}
+<script type="text/javascript">
+    $.validator.setDefaults({ ignore: [] });
+        $(document).ready(function () {
+            $(".followUpTypeChanger").change(function () {
+                var urlValue = '';
+                var thisControl = $(this);
+                if ($(this).val() !== '') {
+                    urlValue = "/NPAManagement/GetFollowUpDetailCardAccordingToFollowUpType?followUpTypeId=" + $(this).val();
+                }
+            if (urlValue !== "") {
+                $.ajax({
+                    url: urlValue,
+                    contentType: 'application/html; charset=utf-8',
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function (result) {
+                        var fileControl = $(thisControl).closest('.collapseFollowUpDetail').find('.dvFollowUpDetailGeneral');
+                        $(thisControl).closest('.collapseFollowUpDetail').find('.dvFollowUpDetailGeneral').html(result.replace(/&amp;/g, '&'));
+                        var form = $("#formNPA")
+                            .removeData("validator") /* added by the raw jquery.validate plugin */
+                            .removeData("unobtrusiveValidation");  /* added by the jquery unobtrusive plugin*/
+
+                        //var inputCtrl = $(fileControl).find("input[type=file]")[0];
+                        //var reader = new FileReader();
+                        //var fileByteArray = [];
+
+                        //inputCtrl.addEventListener('change', (e) => {
+                        //    reader.readAsDataURL(e.target.files[0]);
+                        //    reader.onloadend = (evt) => {
+                        //        if (evt.target.readyState === FileReader.DONE) {
+                        //            console.log(reader.result);
+                        //            $(e.target).attr("bytearr", reader.result.replace('data:', '').replace(/^.+,/, ''));
+                        //        }
+                        //    }
+                        //});
+
+
+                        $.validator.unobtrusive.parse("#formNPA");
+                    },
+                    error: function (xhr, status) { alert(status); }
+                });
+            }
+            else {
+                $('#dvFollowUpDetail_@(idValueToAttach)').html('');
+            }
+        });
+        });
+</script>

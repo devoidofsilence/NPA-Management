@@ -1,0 +1,70 @@
+﻿@using NPAManagement.ValidationFilters;
+@model NPAManagement.Models.FollowUpDetailByTelephone
+@if (this.ViewContext.FormContext == null)
+{
+    this.ViewContext.FormContext = new FormContext();
+}
+@{string idValueToAttach = $"Telephone_{new Random().Next(1000, 9999)}{new Random().Next(1000, 9999)}{new Random().Next(10000, 99999)}{new Random().Next(1000, 9999)}";}
+<div id="followUpDetailType_@idValueToAttach">
+    <br />
+    @Html.HiddenFor(model => model.EnableControls)
+    @if (Model.EnableControls == false)
+    {
+        @Html.HiddenFor(model => model.ContactDate)
+        @Html.HiddenFor(model => model.ResponseOfBorrower)
+        @Html.HiddenFor(model => model.NextActionToBeTaken)
+        @Html.HiddenFor(model => model.DueDateOfNextAction)
+    }
+    @Html.HiddenFor(model => model.FollowUpMainId, new { @class = "form-control", @data_Model = "FollowUpMainId", @id = "FollowUpMainId" + (idValueToAttach) })
+    @Html.HiddenFor(model => model.FollowUpTypeId, new { @class = "form-control", @data_Model = "FollowUpTypeId", @id = "FollowUpTypeId" + (idValueToAttach) })
+    @Html.HiddenFor(model => model.FollowUpById, new { @class = "form-control", @data_Model = "FollowUpById", @id = "FollowUpById" + (idValueToAttach) })
+    <div class="card">
+        <div class="card-header" data-toggle="collapse" data-target="#collapseFollowUpDetailTelephone_@idValueToAttach" aria-expanded="true" aria-controls="collapseFollowUpDetailTelephone_@idValueToAttach">
+            <h3>
+                Follow-Up Detail By Telephone
+            </h3>
+        </div>
+        <div class="collapse show" id="collapseFollowUpDetailTelephone_@idValueToAttach">
+            <div class="card-body">
+                <div class="form-row">
+                    @Html.LabelFor(model => model.ContactDate, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.ContactDate, new { htmlAttributes = new { @class = "form-control date", @readOnly = "readOnly", @data_Model = "ContactDate", @id = "ContactDate" + (idValueToAttach) }.DisabledIf(Model.EnableControls == false) })
+                        @Html.ValidationMessageFor(model => model.ContactDate, "", new { @class = "text-danger" })
+                    </div>
+                    @Html.LabelFor(model => model.ResponseOfBorrower, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.ResponseOfBorrower, new { htmlAttributes = new { @class = "form-control", @data_Model = "ResponseOfBorrower" }.DisabledIf(Model.EnableControls == false) })
+                        @Html.ValidationMessageFor(model => model.ResponseOfBorrower, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <hr />
+                <div class="form-row">
+                    @Html.LabelFor(model => model.NextActionToBeTaken, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.NextActionToBeTaken, new { htmlAttributes = new { @class = "form-control", @data_Model = "NextActionToBeTaken" }.DisabledIf(Model.EnableControls == false) })
+                        @Html.ValidationMessageFor(model => model.NextActionToBeTaken, "", new { @class = "text-danger" })
+                    </div>
+                    @Html.LabelFor(model => model.DueDateOfNextAction, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.DueDateOfNextAction, new { htmlAttributes = new { @class = "form-control date", @readOnly = "readOnly", @data_Model = "DueDateOfNextAction", @id = "DueDateOfNextAction" + (idValueToAttach) }.DisabledIf(Model.EnableControls == false) })
+                        @Html.ValidationMessageFor(model => model.DueDateOfNextAction, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#followUpDetailType_@(idValueToAttach) .date").datepicker({
+            dateFormat: 'yy/mm/dd',
+            changeMonth: true,
+            changeYear: true
+        });
+    });
+</script>

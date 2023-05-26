@@ -1,0 +1,82 @@
+﻿@using NPAManagement.ValidationFilters;
+@model NPAManagement.Models.CollateralDetailInCaseOfGold
+@if (this.ViewContext.FormContext == null)
+{
+    this.ViewContext.FormContext = new FormContext();
+}
+@{
+    bool viewOnlyUser = false;
+    if (ViewBag.ViewOnlyUser != null)
+    {
+        viewOnlyUser = (bool)ViewBag.ViewOnlyUser;
+    }
+}
+@{string idValueToAttach = $"_{new Random().Next(1000, 9999)}{new Random().Next(1000, 9999)}{new Random().Next(10000, 99999)}{new Random().Next(1000, 9999)}";}
+<div id="dvCollateralDetailGold@(idValueToAttach)">
+    <br />
+    <div class="card">
+        <div class="card-header" data-toggle="collapse" data-target="#collapseCollateralDetailGold@(idValueToAttach)" aria-expanded="true" aria-controls="collapseCollateralDetailGold@(idValueToAttach)">
+            <h3>
+                Gold Collateral Detail
+            </h3>
+        </div>
+        <div class="collapse show" id="collapseCollateralDetailGold@(idValueToAttach)">
+            <div class="card-body">
+                @*@Html.HiddenFor(m => m.CollateralDetailMainId)*@
+                <div class="form-row">
+                    @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control decimalType", @data_Model = "Quantity", Name = "Quantity" + (idValueToAttach) }.DisabledIf(viewOnlyUser == true) })
+                        @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+                    </div>
+                    @Html.LabelFor(model => model.MeasurementUnitId, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.DropDownListFor(m => m.MeasurementUnitId, (IEnumerable<SelectListItem>)ViewData["MeasurementUnit"], "-- Please Select --", new { @class = "form-control ddlHandler", @data_Model = "MeasurementUnitId", Name = "MeasurementUnitId" + (idValueToAttach) }.DisabledIf(viewOnlyUser == true))
+                        @Html.ValidationMessageFor(m => m.MeasurementUnitId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <hr />
+                <div class="form-row">
+                    @Html.LabelFor(model => model.GoldTypeId, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.DropDownListFor(m => m.GoldTypeId, (IEnumerable<SelectListItem>)ViewData["GoldForm"], "-- Please Select --", new { @class = "form-control ddlHandler", @data_Model = "GoldTypeId", Name = "GoldTypeId" + (idValueToAttach) }.DisabledIf(viewOnlyUser == true))
+                        @Html.ValidationMessageFor(m => m.GoldTypeId, "", new { @class = "text-danger" })
+                    </div>
+                    @Html.LabelFor(model => model.ValueOfGold, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.ValueOfGold, new { htmlAttributes = new { @class = "form-control decimalType", @data_Model = "ValueOfGold", Name = "ValueOfGold" + (idValueToAttach) }.DisabledIf(viewOnlyUser == true) })
+                        @Html.ValidationMessageFor(model => model.ValueOfGold, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <hr />
+                <div class="form-row">
+                    @Html.LabelFor(model => model.NameOfGoldTester, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.NameOfGoldTester, new { htmlAttributes = new { @class = "form-control", @data_Model = "NameOfGoldTester", Name = "NameOfGoldTester" + (idValueToAttach) }.DisabledIf(viewOnlyUser == true) })
+                        @Html.ValidationMessageFor(model => model.NameOfGoldTester, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".date").datepicker({
+            dateFormat: 'yy/mm/dd',
+            changeMonth: true,
+            changeYear: true
+        });
+
+        $('.decimalType').toArray().forEach(function (field) {
+            new Cleave(field, {
+                numeral: true,
+                numeralThousandsGroupStyle: 'thousand'
+            });
+        });
+    });
+</script>

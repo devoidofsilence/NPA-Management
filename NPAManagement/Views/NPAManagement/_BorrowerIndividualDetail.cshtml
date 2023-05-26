@@ -1,0 +1,66 @@
+﻿@using NPAManagement.ValidationFilters;
+@model NPAManagement.Models.BorrowerTypeIndividualDetail
+@Html.AntiForgeryToken()
+@if (this.ViewContext.FormContext == null)
+{
+    this.ViewContext.FormContext = new FormContext();
+}
+@{
+    bool viewOnlyUser = false;
+    if (ViewBag.ViewOnlyUser!=null)
+    {
+        viewOnlyUser = (bool)ViewBag.ViewOnlyUser;
+    }
+}
+<div class="card">
+    <div class="card-header" data-toggle="collapse" data-target="#collapseBorrowerIndividualDetail" aria-expanded="true" aria-controls="collapseBorrowerIndividualDetail">
+        <h3>
+            Individual's Details
+        </h3>
+    </div>
+    <div class="collapse show" id="collapseBorrowerIndividualDetail">
+        <div class="card-body">
+            <div class="form-row">
+                @Html.LabelFor(model => model.BorrowerFatherName, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.BorrowerFatherName, new { htmlAttributes = new { @class = "form-control", @data_Model = "BorrowerFatherName" }.DisabledIf(viewOnlyUser == true) })
+                    @Html.ValidationMessageFor(model => model.BorrowerFatherName, "", new { @class = "text-danger" })
+                </div>
+                @Html.LabelFor(model => model.BorrowerGrandfatherName, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.BorrowerGrandfatherName, new { htmlAttributes = new { @class = "form-control", @data_Model = "BorrowerGrandfatherName" }.DisabledIf(viewOnlyUser == true) })
+                    @Html.ValidationMessageFor(model => model.BorrowerGrandfatherName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <hr />
+            <div class="form-row">
+                @Html.LabelFor(model => model.BorrowerCitizenshipNumber, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.BorrowerCitizenshipNumber, new { htmlAttributes = new { @class = "form-control", @data_Model = "BorrowerCitizenshipNumber" }.DisabledIf(viewOnlyUser == true) })
+                    @Html.ValidationMessageFor(model => model.BorrowerCitizenshipNumber, "", new { @class = "text-danger" })
+                </div>
+                @Html.LabelFor(model => model.BorrowerSpouseName, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.BorrowerSpouseName, new { htmlAttributes = new { @class = "form-control", @data_Model = "BorrowerSpouseName" }.DisabledIf(viewOnlyUser == true) })
+                    @Html.ValidationMessageFor(model => model.BorrowerSpouseName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <hr />
+            <div class="form-row">
+                @Html.LabelFor(model => model.BorrowerSonName, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.BorrowerSonName, new { htmlAttributes = new { @class = "form-control", @data_Model = "BorrowerSonName" }.DisabledIf(viewOnlyUser == true) })
+                    @Html.ValidationMessageFor(model => model.BorrowerSonName, "", new { @class = "text-danger" })
+                </div>
+                @Html.LabelFor(model => model.BorrowerDaughterName, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.BorrowerDaughterName, new { htmlAttributes = new { @class = "form-control", @data_Model = "BorrowerDaughterName" }.DisabledIf(viewOnlyUser == true) })
+                    @Html.ValidationMessageFor(model => model.BorrowerDaughterName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

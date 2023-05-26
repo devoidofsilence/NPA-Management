@@ -1,0 +1,173 @@
+﻿@using NPAManagement.ValidationFilters;
+@model NPAManagement.Models.CollateralDetailInCaseOfVehicle
+@if (this.ViewContext.FormContext == null)
+{
+    this.ViewContext.FormContext = new FormContext();
+}
+@{
+    bool viewOnlyUser = false;
+    if (ViewBag.ViewOnlyUser != null)
+    {
+        viewOnlyUser = (bool)ViewBag.ViewOnlyUser;
+    }
+}
+@{string idValueToAttach = $"_{new Random().Next(1000, 9999)}{new Random().Next(1000, 9999)}{new Random().Next(10000, 99999)}{new Random().Next(1000, 9999)}";}
+<div id="dvCollateralDetailVehicle@(idValueToAttach)">
+    <br />
+    <div class="card">
+        <div class="card-header" data-toggle="collapse" data-target="#collapseCollateralDetailVehicle@(idValueToAttach)" aria-expanded="true" aria-controls="collapseCollateralDetailVehicle@(idValueToAttach)">
+            <h3>
+                Vehicle Collateral Detail
+            </h3>
+        </div>
+        <div class="collapse show" id="collapseCollateralDetailVehicle@(idValueToAttach)">
+            <div class="card-body">
+                @*@Html.HiddenFor(m => m.CollateralDetailMainId)*@
+                <div class="form-row">
+                    @Html.LabelFor(model => model.VehicleTypeId, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.DropDownListFor(m => m.VehicleTypeId, (IEnumerable<SelectListItem>)ViewData["VehicleTypes"], "-- Please Select --", new { @class = "form-control", @data_Model = "VehicleTypeId", Name = "VehicleTypeId" + (idValueToAttach) }.DisabledIf(viewOnlyUser == true))
+                        @Html.ValidationMessageFor(m => m.VehicleTypeId, "", new { @class = "text-danger" })
+                    </div>
+                    @Html.LabelFor(model => model.VehicleModel, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.VehicleModel, new { htmlAttributes = new { @class = "form-control", @data_Model = "VehicleModel", Name = "VehicleModel" + (idValueToAttach) }.DisabledIf(viewOnlyUser == true) })
+                        @Html.ValidationMessageFor(model => model.VehicleModel, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <hr />
+                <div class="form-row">
+                    @Html.LabelFor(model => model.EngineNumber, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.EngineNumber, new { htmlAttributes = new { @class = "form-control", @data_Model = "EngineNumber" }.DisabledIf(viewOnlyUser == true) })
+                        @Html.ValidationMessageFor(model => model.EngineNumber, "", new { @class = "text-danger" })
+                    </div>
+                    @Html.LabelFor(model => model.ChassisNumber, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.ChassisNumber, new { htmlAttributes = new { @class = "form-control", @data_Model = "ChassisNumber" }.DisabledIf(viewOnlyUser == true) })
+                        @Html.ValidationMessageFor(model => model.ChassisNumber, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <hr />
+                <div class="form-row">
+                    @Html.LabelFor(model => model.VehicleRegistrationNumber, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.VehicleRegistrationNumber, new { htmlAttributes = new { @class = "form-control", @data_Model = "VehicleRegistrationNumber" }.DisabledIf(viewOnlyUser == true) })
+                        @Html.ValidationMessageFor(model => model.VehicleRegistrationNumber, "", new { @class = "text-danger" })
+                    </div>
+                    @Html.LabelFor(model => model.VehicleRegistrationDate, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.VehicleRegistrationDate, new { htmlAttributes = new { @class = "form-control date", @readOnly = "readOnly", @data_Model = "VehicleRegistrationDate", @id = "LatestValuationDate" + (idValueToAttach) }.DisabledIf(viewOnlyUser == true) })
+                        @Html.ValidationMessageFor(model => model.VehicleRegistrationDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <hr />
+                <div class="form-row">
+                    @Html.LabelFor(model => model.VehicleRegisteredOffice, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.VehicleRegisteredOffice, new { htmlAttributes = new { @class = "form-control", @data_Model = "VehicleRegisteredOffice" }.DisabledIf(viewOnlyUser == true) })
+                        @Html.ValidationMessageFor(model => model.VehicleRegisteredOffice, "", new { @class = "text-danger" })
+                    </div>
+                    @Html.LabelFor(model => model.VehicleMakeYear, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.VehicleMakeYear, new { htmlAttributes = new { @class = "form-control", @data_Model = "VehicleMakeYear" }.DisabledIf(viewOnlyUser == true) })
+                        @Html.ValidationMessageFor(model => model.VehicleMakeYear, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <hr />
+                <div class="form-row">
+                    @Html.LabelFor(model => model.FirstValuatorName, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.FirstValuatorName, new { htmlAttributes = new { @class = "form-control", @data_Model = "FirstValuatorName" }.DisabledIf(viewOnlyUser == true) })
+                        @Html.ValidationMessageFor(model => model.FirstValuatorName, "", new { @class = "text-danger" })
+                    </div>
+                    @Html.LabelFor(model => model.FirstValuationDate, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.FirstValuationDate, new { htmlAttributes = new { @class = "form-control date", @readOnly = "readOnly", @data_Model = "FirstValuationDate", @id = "FirstValuationDate" + (idValueToAttach) }.DisabledIf(viewOnlyUser == true) })
+                        @Html.ValidationMessageFor(model => model.FirstValuationDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <hr />
+                <div class="form-row">
+                    @Html.LabelFor(model => model.FirstFMVOfProperty, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.FirstFMVOfProperty, new { htmlAttributes = new { @class = "form-control decimalType", @data_Model = "FirstFMVOfProperty" }.DisabledIf(viewOnlyUser == true) })
+                        @Html.ValidationMessageFor(model => model.FirstFMVOfProperty, "", new { @class = "text-danger" })
+                    </div>
+                    @Html.LabelFor(model => model.FirstValuatorExistsInSBLCurrentlyYN, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.DropDownListFor(modelItem => modelItem.FirstValuatorExistsInSBLCurrentlyYN, new[] { new SelectListItem { Text = "Yes", Value = "1" }, new SelectListItem { Text = "No", Value = "0" } }, new { @class = "form-control", @data_Model = "FirstValuatorExistsInSBLCurrentlyYN" }.DisabledIf(viewOnlyUser == true))
+                        @Html.ValidationMessageFor(model => model.FirstValuatorExistsInSBLCurrentlyYN, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <hr />
+                <div class="form-row">
+                    @Html.LabelFor(model => model.LatestValuatorName, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.LatestValuatorName, new { htmlAttributes = new { @class = "form-control", @data_Model = "LatestValuatorName" }.DisabledIf(viewOnlyUser == true) })
+                        @Html.ValidationMessageFor(model => model.LatestValuatorName, "", new { @class = "text-danger" })
+                    </div>
+                    @Html.LabelFor(model => model.LatestValuationDate, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.LatestValuationDate, new { htmlAttributes = new { @class = "form-control date", @readOnly = "readOnly", @data_Model = "LatestValuationDate", @id = "LatestValuationDate" + (idValueToAttach) }.DisabledIf(viewOnlyUser == true) })
+                        @Html.ValidationMessageFor(model => model.LatestValuationDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <hr />
+                <div class="form-row">
+                    @Html.LabelFor(model => model.ValueOfPropertyAsPerLatestValuationReportOrTaxInvoice, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.ValueOfPropertyAsPerLatestValuationReportOrTaxInvoice, new { htmlAttributes = new { @class = "form-control decimalType", @data_Model = "ValueOfPropertyAsPerLatestValuationReportOrTaxInvoice" }.DisabledIf(viewOnlyUser == true) })
+                        @Html.ValidationMessageFor(model => model.ValueOfPropertyAsPerLatestValuationReportOrTaxInvoice, "", new { @class = "text-danger" })
+                    </div>
+                    @Html.LabelFor(model => model.LatestValuatorExistsInSBLCurrentlyYN, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.DropDownListFor(modelItem => modelItem.LatestValuatorExistsInSBLCurrentlyYN, new[] { new SelectListItem { Text = "Yes", Value = "1" }, new SelectListItem { Text = "No", Value = "0" } }, new { @class = "form-control", @data_Model = "LatestValuatorExistsInSBLCurrentlyYN" }.DisabledIf(viewOnlyUser == true))
+                        @Html.ValidationMessageFor(model => model.LatestValuatorExistsInSBLCurrentlyYN, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <hr />
+                <div class="form-row">
+                    @Html.LabelFor(model => model.InsuranceCoverageType, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.InsuranceCoverageType, new { htmlAttributes = new { @class = "form-control", @data_Model = "InsuranceCoverageType" }.DisabledIf(viewOnlyUser == true) })
+                        @Html.ValidationMessageFor(model => model.InsuranceCoverageType, "", new { @class = "text-danger" })
+                    </div>
+                    @Html.LabelFor(model => model.InsuranceExpiryDate, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.InsuranceExpiryDate, new { htmlAttributes = new { @class = "form-control date", @readOnly = "readOnly", @data_Model = "InsuranceExpiryDate", @id = "InsuranceExpiryDate" + (idValueToAttach) }.DisabledIf(viewOnlyUser == true) })
+                        @Html.ValidationMessageFor(model => model.InsuranceExpiryDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <hr />
+                <div class="form-row">
+                    @Html.LabelFor(model => model.InsuranceAmount, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.InsuranceAmount, new { htmlAttributes = new { @class = "form-control decimalType", @data_Model = "InsuranceAmount" }.DisabledIf(viewOnlyUser == true) })
+                        @Html.ValidationMessageFor(model => model.InsuranceAmount, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".date").datepicker({
+            dateFormat: 'yy/mm/dd',
+            changeMonth: true,
+            changeYear: true
+        });
+
+        $('.decimalType').toArray().forEach(function (field) {
+            new Cleave(field, {
+                numeral: true,
+                numeralThousandsGroupStyle: 'thousand'
+            });
+        });
+    });
+</script>

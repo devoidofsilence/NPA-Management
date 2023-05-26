@@ -1,0 +1,81 @@
+﻿@using NPAManagement.ValidationFilters;
+@model NPAManagement.Models.CollateralDetailMain
+@if (this.ViewContext.FormContext == null)
+{
+    this.ViewContext.FormContext = new FormContext();
+}
+@{
+    bool viewOnlyUser = false;
+    if (ViewBag.ViewOnlyUser != null)
+    {
+        viewOnlyUser = (bool)ViewBag.ViewOnlyUser;
+    }
+}
+@{ string idValueToAttach = $"{Model.CollateralClass}_{new Random().Next(1000, 9999)}{new Random().Next(1000, 9999)}{new Random().Next(10000, 99999)}{new Random().Next(1000, 9999)}"; }
+<div id="collateralDetail_@idValueToAttach">
+    <div class="card">
+        <div class="card-header" data-toggle="collapse" data-target="#collapseCollateralDetail@(idValueToAttach)" aria-expanded="true" aria-controls="collapseCollateralDetail@(idValueToAttach)">
+            <h3>
+                Collateral Detail
+            </h3>
+        </div>
+        <div class="collapse show collateralDetail" id="collapseCollateralDetail@(idValueToAttach)">
+            <div class="card-body">
+                @Html.HiddenFor(m => m.CollateralClass)
+                <div class="form-row">
+                    @Html.LabelFor(model => model.CollateralTypeId, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.DropDownListFor(m => m.CollateralTypeId, (IEnumerable<SelectListItem>)ViewData["CollateralTypes"], "-- Please Select --", new { @class = "form-control collateralTypeChanger", @data_Model = "CollateralTypeId", @id = "CollateralTypeId" + (idValueToAttach), Name = "CollateralTypeId" + (idValueToAttach) }.DisabledIf(viewOnlyUser == true))
+                        @Html.ValidationMessageFor(m => m.CollateralTypeId, "", new { @class = "text-danger" })
+                    </div>
+                    @if (!viewOnlyUser)
+                    {
+                        <div class="offset-5 col-md-1">
+                            <button class="btnclsClose" type="button" onclick="if (confirm('Do you want to remove this item?')) { $('#collateralDetail_@idValueToAttach').remove(); }">Remove</button>
+                        </div>
+                    }
+                </div>
+                <div id="dvCollateralDetail_@(idValueToAttach)" class="dvCollateralDetailGeneral">
+                    @* Follow Up detail according to follow up type selected goes here *@
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+</div>
+@section Scripts {
+    @*@Scripts.Render("~/bundles/jquery")*@
+    @Scripts.Render("~/bundles/jqueryval")
+}
+<script type="text/javascript">
+    $.validator.setDefaults({ ignore: [] });
+        $(document).ready(function () {
+            $(".collateralTypeChanger").change(function () {
+                var urlValue = '';
+                var thisControl = $(this);
+                if ($(this).val() !== '') {
+                    urlValue = "/NPAManagement/GetCollateralDetailCardAccordingToCollateralType?collateralTypeId=" + $(this).val() + "&collateralClass=" + @(Model.CollateralClass);
+                }
+            if (urlValue !== "") {
+                $.ajax({
+                    url: urlValue,
+                    contentType: 'application/html; charset=utf-8',
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function (result) {
+                        $(thisControl).closest('.collateralDetail').find('.dvCollateralDetailGeneral').html(result.replace(/&amp;/g, '&'));
+                        var form = $("#formNPA")
+                            .removeData("validator") /* added by the raw jquery.validate plugin */
+                            .removeData("unobtrusiveValidation");  /* added by the jquery unobtrusive plugin*/
+
+                        $.validator.unobtrusive.parse("#formNPA");
+                    },
+                    error: function (xhr, status) { alert(status); }
+                });
+            }
+            else {
+                $('#dvCollateralDetail_@(idValueToAttach)').html('');
+            }
+        });
+        });
+</script>

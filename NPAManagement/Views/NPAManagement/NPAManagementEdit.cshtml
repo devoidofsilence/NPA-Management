@@ -1,0 +1,881 @@
+﻿@using NPAManagement.ValidationFilters;
+@model NPAManagement.Models.NPAManagementMain
+
+@{
+    ViewBag.Title = "Edit NPA Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header" data-toggle="collapse" data-target="#collapseWholeBody" aria-expanded="true" aria-controls="collapseWholeBody">
+        <h3>
+            Add New
+        </h3>
+    </div>
+    <div class="collapse show" id="collapseWholeBody">
+        <div class="card-body">
+            @using (Html.BeginForm("NPAManagementEdit", "NPAManagement", FormMethod.Post, new { @id = "formNPA", role = "form", enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.NPAManagementId)
+                @Html.HiddenFor(model => model.LoggedInUserType)
+                @Html.HiddenFor(model => model.ViewOnlyUser)
+                @Html.HiddenFor(model => model.EnteredBy)
+                @Html.HiddenFor(model => model.EnteredOn)
+                @Html.HiddenFor(model => model.StringifiedBorrowerTypeIndividualLegalDetail)
+                @Html.HiddenFor(model => model.StringifiedListOfPrimaryCollateralDetailObjects)
+                @Html.HiddenFor(model => model.StringifiedListOfSecondaryCollateralDetailObjects)
+                @Html.HiddenFor(model => model.StringifiedListOfLoanAccountDetailObjects)
+                @Html.HiddenFor(model => model.StringifiedListOfBranchFollowUpDetailObjects)
+                @Html.HiddenFor(model => model.StringifiedListOfSACFollowUpDetailObjects)
+                if (!Model.ViewOnlyUser)
+                {
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Save" class="btn btn-info" />
+                        </div>
+                    </div>
+                    <hr />
+                }
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                    <h2 style="color:red">@ViewBag.ErrorMessage</h2>
+                    <div class="form-row">
+                        @Html.LabelFor(model => model.CIFNo, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                        <div class="col-md-2">
+                            @Html.EditorFor(model => model.CIFNo, new { htmlAttributes = new { @class = "form-control" }.DisabledIf(Model.ViewOnlyUser == true) })
+                            @Html.ValidationMessageFor(model => model.CIFNo, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-1">
+                            @if (!Model.ViewOnlyUser)
+                            {
+                                <input type="button" value="Get" id="btnGetDataFromCIF" />
+                            }
+                        </div>
+                        @Html.LabelFor(model => model.GroupName, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                        <div class="col-md-3">
+                            @Html.EditorFor(model => model.GroupName, new { htmlAttributes = new { @class = "form-control" }.DisabledIf(Model.ViewOnlyUser == true) })
+                            @Html.ValidationMessageFor(model => model.GroupName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="form-row">
+                        @Html.LabelFor(model => model.BorrowerName, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                        <div class="col-md-3">
+                            @Html.EditorFor(model => model.BorrowerName, new { htmlAttributes = new { @class = "form-control" }.DisabledIf(Model.ViewOnlyUser == true) })
+                            @Html.ValidationMessageFor(model => model.BorrowerName, "", new { @class = "text-danger" })
+                        </div>
+                        @Html.LabelFor(model => model.BorrowerContactNumber, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                        <div class="col-md-3">
+                            @Html.EditorFor(model => model.BorrowerContactNumber, new { htmlAttributes = new { @class = "form-control" }.DisabledIf(Model.ViewOnlyUser == true) })
+                            @Html.ValidationMessageFor(model => model.BorrowerContactNumber, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="form-row">
+                        @Html.LabelFor(model => model.BorrowerEmailAddress, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                        <div class="col-md-3">
+                            @Html.EditorFor(model => model.BorrowerEmailAddress, new { htmlAttributes = new { @class = "form-control" }.DisabledIf(Model.ViewOnlyUser == true) })
+                            @Html.ValidationMessageFor(model => model.BorrowerEmailAddress, "", new { @class = "text-danger" })
+                        </div>
+                        @Html.LabelFor(model => model.CurrentROName, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                    <div class="col-md-3">
+                        @Html.DropDownListFor(m => m.CurrentROName, (IEnumerable<SelectListItem>)ViewData["SBLEmployees"], "-- Please Select --", new { @class = "form-control select2Employees", @data_Model = "CurrentROName" }.DisabledIf(Model.ViewOnlyUser == true))
+                        @Html.ValidationMessageFor(model => model.CurrentROName, "", new { @class = "text-danger" })
+                    </div>
+                    </div>
+                    <hr />
+                    <div class="form-row">
+                        @Html.LabelFor(model => model.BranchLocationCode, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                        <div class="col-md-3">
+                            @Html.DropDownListFor(m => m.BranchLocationCode, (IEnumerable<SelectListItem>)ViewData["Branches"], "-- Please Select --", new { @class = "form-control", @data_Model = "BranchLocationCode" }.DisabledIf(Model.ViewOnlyUser == true))
+                            @Html.ValidationMessageFor(m => m.BranchLocationCode, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="card">
+                        <div class="card-header" data-toggle="collapse" data-target="#collapseBorrowerAddress" aria-expanded="true" aria-controls="collapseBorrowerAddress">
+                            <h3>
+                                Borrower's Address
+                            </h3>
+                        </div>
+                        <div class="collapse show" id="collapseBorrowerAddress">
+                            <div class="card-body">
+                                <ul class="nav nav-tabs" id="BorrowerAddressTab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link active" id="permanent-address-tab" data-toggle="tab" href="#permanentAddress" role="tab" aria-controls="permanent-address" aria-selected="true">Permanent Address</a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link" id="temporary-address-tab" data-toggle="tab" href="#temporaryAddress" role="tab" aria-controls="temporary-address" aria-selected="false">Temporary Address</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content" id="BorrowerAddressTabContent">
+                                    <div class="tab-pane fade show active" id="permanentAddress" role="tabpanel" aria-labelledby="permanent-address-tab">
+                                        <div class="form-row">
+                                            @Html.LabelFor(model => model.BorrowerPermanentAddressProvinceId, htmlAttributes: new { @class = "control-label col-md-2 required" })
+                                            <div class="col-md-1">
+                                                @Html.TextBoxFor(model => model.BorrowerPermanentAddressProvinceId, new { @disabled = "disabled", @class = "form-control", @id = "txtPermanentAddressProvinceCode" })
+                                            </div>
+                                            <div class="col-md-3">
+                                                @Html.DropDownListFor(m => m.BorrowerPermanentAddressProvinceId, (IEnumerable<SelectListItem>)ViewData["PermanentAddressProvinces"], "-- Please Select --", new { @class = "form-control ddlHandler ddlCascader", @data_Parent_Of = "BorrowerPermanentAddressZoneId", @data_Copy_To = "txtPermanentAddressProvinceCode", @data_Type = "PROVINCE" }.DisabledIf(Model.ViewOnlyUser == true))
+                                                @Html.ValidationMessageFor(m => m.BorrowerPermanentAddressProvinceId, "", new { @class = "text-danger" })
+                                            </div>
+                                            @Html.LabelFor(model => model.BorrowerPermanentAddressZoneId, htmlAttributes: new { @class = "control-label col-md-2 required" })
+                                            <div class="col-md-1">
+                                                @Html.TextBoxFor(model => model.BorrowerPermanentAddressZoneId, new { @disabled = "disabled", @class = "form-control", @id = "txtPermanentAddressZoneCode" })
+                                            </div>
+                                            <div class="col-md-3">
+                                                @Html.DropDownListFor(m => m.BorrowerPermanentAddressZoneId, (IEnumerable<SelectListItem>)ViewData["PermanentAddressZones"], "-- Please Select --", new { @class = "form-control ddlHandler ddlCascader", @data_Parent_Of = "BorrowerPermanentAddressDistrictId", @data_Copy_To = "txtPermanentAddressZoneCode", @data_Type = "ZONE" }.DisabledIf(Model.ViewOnlyUser == true))
+                                                @Html.ValidationMessageFor(m => m.BorrowerPermanentAddressZoneId, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div class="form-row">
+                                            @Html.LabelFor(model => model.BorrowerPermanentAddressDistrictId, htmlAttributes: new { @class = "control-label col-md-2 required" })
+                                            <div class="col-md-1">
+                                                @Html.TextBoxFor(model => model.BorrowerPermanentAddressDistrictId, new { @disabled = "disabled", @class = "form-control", @id = "txtPermanentAddressDistrictCode" })
+                                            </div>
+                                            <div class="col-md-3">
+                                                @Html.DropDownListFor(m => m.BorrowerPermanentAddressDistrictId, (IEnumerable<SelectListItem>)ViewData["PermanentAddressDistricts"], "-- Please Select --", new { @class = "form-control ddlHandler ddlCascader", @data_Copy_To = "txtPermanentAddressDistrictCode", @data_Type = "DISTRICT" }.DisabledIf(Model.ViewOnlyUser == true))
+                                                @Html.ValidationMessageFor(m => m.BorrowerPermanentAddressDistrictId, "", new { @class = "text-danger" })
+                                            </div>
+                                            @Html.LabelFor(model => model.BorrowerPermanentAddressVDCMun, htmlAttributes: new { @class = "control-label col-md-2 required" })
+                                            <div class="col-md-4">
+                                                @Html.TextBoxFor(model => model.BorrowerPermanentAddressVDCMun, new { @class = "form-control", @id = "txtPermanentAddressAreaMunicipality" }.DisabledIf(Model.ViewOnlyUser == true))
+                                                @Html.ValidationMessageFor(m => m.BorrowerPermanentAddressVDCMun, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div class="form-row">
+                                            @Html.LabelFor(model => model.BorrowerPermanentToleStreetName, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                            <div class="col-md-3">
+                                                @Html.EditorFor(model => model.BorrowerPermanentToleStreetName, new { htmlAttributes = new { @class = "form-control" }.DisabledIf(Model.ViewOnlyUser == true) })
+                                                @Html.ValidationMessageFor(model => model.BorrowerPermanentToleStreetName, "", new { @class = "text-danger" })
+                                            </div>
+                                            @Html.LabelFor(model => model.BorrowerPermanentHouseNumber, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                            <div class="col-md-3">
+                                                @Html.EditorFor(model => model.BorrowerPermanentHouseNumber, new { htmlAttributes = new { @class = "form-control" }.DisabledIf(Model.ViewOnlyUser == true) })
+                                                @Html.ValidationMessageFor(model => model.BorrowerPermanentHouseNumber, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="temporaryAddress" role="tabpanel" aria-labelledby="temporary-address-tab">
+                                        <div class="form-row">
+                                            <div class="checkbox">
+                                                <label>@Html.CheckBoxFor(model => model.TempAddSameAsPerAdd, new { }.DisabledIf(Model.ViewOnlyUser == true))&nbsp;@Html.DisplayNameFor(model => model.TempAddSameAsPerAdd)</label>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div class="form-row">
+                                            @Html.LabelFor(model => model.BorrowerTemporaryAddressProvinceId, htmlAttributes: new { @class = "control-label col-md-2 required" })
+                                            <div class="col-md-1">
+                                                @Html.TextBoxFor(model => model.BorrowerTemporaryAddressProvinceId, new { @disabled = "disabled", @class = "form-control", @id = "txtTemporaryAddressProvinceCode" })
+                                            </div>
+                                            <div class="col-md-3">
+                                                @Html.DropDownListFor(m => m.BorrowerTemporaryAddressProvinceId, (IEnumerable<SelectListItem>)ViewData["TemporaryAddressProvinces"], "-- Please Select --", new { @class = "form-control ddlCascader ddlHandler", @data_Parent_Of = "BorrowerTemporaryAddressZoneId", @data_Copy_To = "txtTemporaryAddressProvinceCode", @data_Type = "PROVINCE" }.DisabledIf(Model.ViewOnlyUser == true))
+                                                @Html.ValidationMessageFor(m => m.BorrowerTemporaryAddressProvinceId, "", new { @class = "text-danger" })
+                                            </div>
+                                            @Html.LabelFor(model => model.BorrowerTemporaryAddressZoneId, htmlAttributes: new { @class = "control-label col-md-2 required" })
+                                            <div class="col-md-1">
+                                                @Html.TextBoxFor(model => model.BorrowerTemporaryAddressZoneId, new { @disabled = "disabled", @class = "form-control", @id = "txtTemporaryAddressZoneCode" })
+                                            </div>
+                                            <div class="col-md-3">
+                                                @Html.DropDownListFor(m => m.BorrowerTemporaryAddressZoneId, (IEnumerable<SelectListItem>)ViewData["TemporaryAddressZones"], "-- Please Select --", new { @class = "form-control ddlCascader ddlHandler", @data_Parent_Of = "BorrowerTemporaryAddressDistrictId", @data_Copy_To = "txtTemporaryAddressZoneCode", @data_Type = "ZONE" }.DisabledIf(Model.ViewOnlyUser == true))
+                                                @Html.ValidationMessageFor(m => m.BorrowerTemporaryAddressZoneId, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div class="form-row">
+                                            @Html.LabelFor(model => model.BorrowerTemporaryAddressDistrictId, htmlAttributes: new { @class = "control-label col-md-2 required" })
+                                            <div class="col-md-1">
+                                                @Html.TextBoxFor(model => model.BorrowerTemporaryAddressDistrictId, new { @disabled = "disabled", @class = "form-control", @id = "txtTemporaryAddressDistrictCode" })
+                                            </div>
+                                            <div class="col-md-3">
+                                                @Html.DropDownListFor(m => m.BorrowerTemporaryAddressDistrictId, (IEnumerable<SelectListItem>)ViewData["TemporaryAddressDistricts"], "-- Please Select --", new { @class = "form-control ddlCascader ddlHandler", @data_Copy_To = "txtTemporaryAddressDistrictCode", @data_Type = "DISTRICT" }.DisabledIf(Model.ViewOnlyUser == true))
+                                                @Html.ValidationMessageFor(m => m.BorrowerTemporaryAddressDistrictId, "", new { @class = "text-danger" })
+                                            </div>
+                                            @Html.LabelFor(model => model.BorrowerTemporaryAddressVDCMun, htmlAttributes: new { @class = "control-label col-md-2 required" })
+                                            <div class="col-md-4">
+                                                @Html.TextBoxFor(model => model.BorrowerTemporaryAddressVDCMun, new { @class = "form-control", @id = "txtTemporaryAddressAreaMunicipality" }.DisabledIf(Model.ViewOnlyUser == true))
+                                                @Html.ValidationMessageFor(m => m.BorrowerTemporaryAddressVDCMun, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div class="form-row">
+                                            @Html.LabelFor(model => model.BorrowerTemporaryToleStreetName, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                            <div class="col-md-3">
+                                                @Html.EditorFor(model => model.BorrowerTemporaryToleStreetName, new { htmlAttributes = new { @class = "form-control" }.DisabledIf(Model.ViewOnlyUser == true) })
+                                                @Html.ValidationMessageFor(model => model.BorrowerTemporaryToleStreetName, "", new { @class = "text-danger" })
+                                            </div>
+                                            @Html.LabelFor(model => model.BorrowerTemporaryHouseNumber, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                            <div class="col-md-3">
+                                                @Html.EditorFor(model => model.BorrowerTemporaryHouseNumber, new { htmlAttributes = new { @class = "form-control" }.DisabledIf(Model.ViewOnlyUser == true) })
+                                                @Html.ValidationMessageFor(model => model.BorrowerTemporaryHouseNumber, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="card">
+                        <div class="card-header" data-toggle="collapse" data-target="#collapseBorrowerDetails" aria-expanded="true" aria-controls="collapseBorrowerDetails">
+                            <h3>
+                                Borrower's Details
+                            </h3>
+                        </div>
+                        <div class="collapse show" id="collapseBorrowerDetails">
+                            <div class="card-body">
+                                <div class="form-row">
+                                    @Html.LabelFor(model => model.BorrowerTypeId, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                    <div class="col-md-3">
+                                        @Html.DropDownListFor(m => m.BorrowerTypeId, (IEnumerable<SelectListItem>)ViewData["BorrowerTypes"], "-- Please Select --", new { @class = "form-control", @data_Model = "BorrowerTypeId" }.DisabledIf(Model.ViewOnlyUser == true))
+                                        @Html.ValidationMessageFor(m => m.BorrowerTypeId, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div id="BorrowerDetailSection">
+                                    @* Borrower's Detail card goes here *@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    @* From here to Partial View *@
+
+                    <div class="card">
+                        <div class="card-header" data-toggle="collapse" data-target="#collapseLoanDetails" aria-expanded="true" aria-controls="collapseLoanDetails">
+                            <h3>
+                                Loan Details
+                            </h3>
+                        </div>
+                        @*Loan Details Partial View Start Here*@
+                        <div class="collapse show" id="collapseLoanDetails">
+                            <div class="card-body">
+                                <div class="card">
+                                    <div class="card-body">
+                                        @if (!Model.ViewOnlyUser)
+                                        {
+                                            <div class="form-row">
+                                                <div class="col-md-12">
+                                                    <button type="button" style="float:left" class="addNewRowLoanAccountDetail" data-target="dvLoanDetails" id="btnAddNewRowLoanAccountDetail">Add Loan Account</button>
+                                                </div>
+                                            </div>
+                                            <br />
+                                        }
+                                        <div id="dvLoanDetails">
+                                            @* Loan Details add up here *@
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @*Loan Details Partial View End Here*@
+                    </div>
+
+                    <hr />
+
+                    <div class="card">
+                        <div class="card-header" data-toggle="collapse" data-target="#collapseSecurityDetailsAndValuation" aria-expanded="true" aria-controls="collapseSecurityDetailsAndValuation">
+                            <h3>
+                                Security Details and Valuation
+                            </h3>
+                        </div>
+                        <div class="collapse show collapseSecurityDetailsAndValuation" id="collapseSecurityDetailsAndValuation">
+                            <div id="SecurityDetailsSection" class="card-body">
+                                @* Details Here *@
+                                @if (ViewData["CollateralTypes"] != null)
+                                {
+                                    List<SelectListItem> collateralTypes = (List<SelectListItem>)ViewData["CollateralTypes"];
+                                    <div class="card">
+                                        <div class="card-header" data-toggle="collapse" data-target="#collapsePrimaryCollateralDetails" aria-expanded="true" aria-controls="collapsePrimaryCollateralDetails">
+                                            <h3>
+                                                Primary Collateral
+                                            </h3>
+                                        </div>
+                                        <div class="collapse show primaryCollaterals" id="collapsePrimaryCollateralDetails">
+                                            <div class="card-body">
+                                                @if (!Model.ViewOnlyUser)
+                                                {
+                                                    <div class="form-row">
+                                                        <div class="col-md-12">
+                                                            <button type="button" style="float:right" class="addNewRowPrimaryCollateral" data-target="dvPrimaryCollaterals" id="btnAddNewRowPrimaryCollateral" data-type-id="1">Add Primary Collateral</button>
+                                                        </div>
+                                                    </div>
+                                                    <br />
+                                                }
+                                                <div id="dvPrimaryCollaterals">
+                                                    @* Primary Collaterals add up here *@
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <hr />
+                                    <div class="card">
+                                        <div class="card-header" data-toggle="collapse" data-target="#collapseSecondaryCollateralDetails" aria-expanded="true" aria-controls="collapseSecondaryCollateralDetails">
+                                            <h3>
+                                                Secondary Collateral
+                                            </h3>
+                                        </div>
+                                        <div class="collapse show secondaryCollaterals" id="collapseSecondaryCollateralDetails">
+                                            <div class="card-body">
+                                                @if (!Model.ViewOnlyUser)
+                                                {
+                                                    <div class="form-row">
+                                                        <div class="col-md-12">
+                                                            <button type="button" style="float:right" class="addNewRowSecondaryCollateral" data-target="dvSecondaryCollaterals" id="btnAddNewRowSecondaryCollateral" data-type-id="2">Add Secondary Collateral</button>
+                                                        </div>
+                                                    </div>
+                                                    <br />
+                                                }
+                                                <div id="dvSecondaryCollaterals">
+                                                    @* Secondary Collaterals add up here *@
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+
+                    <div class="card">
+                        <div class="card-header" data-toggle="collapse" data-target="#collapseBranchFollowUp" aria-expanded="true" aria-controls="collapseBranchFollowUp">
+                            <h3>
+                                Follow-Up done by Branch/Department
+                            </h3>
+                        </div>
+                        <div class="collapse show" id="collapseBranchFollowUp">
+                            <div class="card-body">
+                                @if (Model.LoggedInUserType == "B" && !Model.ViewOnlyUser)
+                                {
+                                    <div class="form-row">
+                                        <div class="col-md-12">
+                                            <button type="button" style="float:right" id="btnAddNewRowBranchFollowUp" data-type-id="1">Add Follow-Up</button>
+                                        </div>
+                                    </div>
+                                    <br />
+                                }
+                                <div id="dvBranchFollowUps">
+                                    @* Branch follow ups add up here *@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="form-row">
+                        @Html.LabelFor(model => model.SACROName, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                        <div class="col-md-3">
+                            @Html.EditorFor(model => model.SACROName, new { htmlAttributes = new { @class = "form-control" }.DisabledIf(Model.ViewOnlyUser == true) })
+                            @Html.ValidationMessageFor(model => model.SACROName, "", new { @class = "text-danger" })
+                        </div>
+                        @Html.LabelFor(model => model.FileTransferDateToSAC, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                        <div class="col-md-3">
+                            @Html.EditorFor(model => model.FileTransferDateToSAC, new { htmlAttributes = new { @class = "form-control date", @readOnly = "readOnly" }.DisabledIf(Model.ViewOnlyUser == true) })
+                            @Html.ValidationMessageFor(model => model.FileTransferDateToSAC, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="form-row">
+                        @Html.LabelFor(model => model.ProvisionStatusIdOnTheDateOfTransfer, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                        <div class="col-md-3">
+                            @Html.DropDownListFor(m => m.ProvisionStatusIdOnTheDateOfTransfer, (IEnumerable<SelectListItem>)ViewData["ProvisionStatuses"], "-- Please Select --", new { @class = "form-control" }.DisabledIf(Model.ViewOnlyUser == true))
+                            @Html.ValidationMessageFor(m => m.ProvisionStatusIdOnTheDateOfTransfer, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="card">
+                        <div class="card-header" data-toggle="collapse" data-target="#collapseSACFollowUp" aria-expanded="true" aria-controls="collapseSACFollowUp">
+                            <h3>
+                                Follow-Up done by SAC
+                            </h3>
+                        </div>
+                        <div class="collapse show" id="collapseSACFollowUp">
+                            <div class="card-body">
+                                @if (Model.LoggedInUserType == "S" && !Model.ViewOnlyUser)
+                                {
+                                    <div class="form-row">
+                                        <div class="col-md-12">
+                                            <button type="button" style="float:right" id="btnAddNewRowSACFollowUp" data-type-id="2">Add Follow-Up</button>
+                                        </div>
+                                    </div>
+                                    <br />
+                                }
+                                <div id="dvSACFollowUps">
+                                    @* SAC follow ups add up here *@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="card">
+                        <div class="card-header" data-toggle="collapse" data-target="#collapseBlackListDetails" aria-expanded="true" aria-controls="collapseBlackListDetails">
+                            <h3>
+                                Blacklisting Details
+                            </h3>
+                        </div>
+                        <div class="collapse show" id="collapseBlackListDetails">
+                            <div class="card-body">
+                                <div class="form-row">
+                                    @Html.LabelFor(model => model.DateOfRequestForBlacklisting, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                    <div class="col-md-3">
+                                        @Html.EditorFor(model => model.DateOfRequestForBlacklisting, new { htmlAttributes = new { @class = "form-control date", @readOnly = "readOnly" }.DisabledIf(Model.ViewOnlyUser == true) })
+                                        @Html.ValidationMessageFor(model => model.DateOfRequestForBlacklisting, "", new { @class = "text-danger" })
+                                    </div>
+                                    @Html.LabelFor(model => model.BlacklistStatusOfRequest, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                    <div class="col-md-3">
+                                        @Html.EditorFor(model => model.BlacklistStatusOfRequest, new { htmlAttributes = new { @class = "form-control" }.DisabledIf(Model.ViewOnlyUser == true) })
+                                        @Html.ValidationMessageFor(model => model.BlacklistStatusOfRequest, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    @Html.LabelFor(model => model.BlacklistDate, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                    <div class="col-md-3">
+                                        @Html.EditorFor(model => model.BlacklistDate, new { htmlAttributes = new { @class = "form-control date", @readOnly = "readOnly" }.DisabledIf(Model.ViewOnlyUser == true) })
+                                        @Html.ValidationMessageFor(model => model.BlacklistDate, "", new { @class = "text-danger" })
+                                    </div>
+                                    @Html.LabelFor(model => model.BlacklistNumber, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                    <div class="col-md-3">
+                                        @Html.EditorFor(model => model.BlacklistNumber, new { htmlAttributes = new { @class = "form-control" }.DisabledIf(Model.ViewOnlyUser == true) })
+                                        @Html.ValidationMessageFor(model => model.BlacklistNumber, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="card">
+                        <div class="card-header" data-toggle="collapse" data-target="#collapseNBADRTWO" aria-expanded="true" aria-controls="collapseNBADRTWO">
+                            <h3>
+                                NBA/DRT/Write-Off
+                            </h3>
+                        </div>
+                        <div class="card-body show" id="collapseNBADRTWO">
+                            <ul class="nav nav-tabs" id="FinalInfoDetailsTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link active" id="nba-details-tab" data-toggle="tab" href="#nbaDetails" role="tab" aria-controls="nba-details" aria-selected="true">NBA</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" id="drt-details-tab" data-toggle="tab" href="#drtDetails" role="tab" aria-controls="drt-details" aria-selected="false">DRT</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" id="writeoff-details-tab" data-toggle="tab" href="#writeoffDetails" role="tab" aria-controls="writeoff-details" aria-selected="false">Write Off</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="FinalInfoDetailsTabContent">
+                                <div class="tab-pane fade show active" id="nbaDetails" role="tabpanel" aria-labelledby="nba-details-tab">
+                                    <div class="form-row">
+                                        @Html.LabelFor(model => model.DateOfInitiationForBookingNBA, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                        <div class="col-md-3">
+                                            @Html.EditorFor(model => model.DateOfInitiationForBookingNBA, new { htmlAttributes = new { @class = "form-control date", @readOnly = "readOnly" }.DisabledIf(Model.ViewOnlyUser == true) })
+                                            @Html.ValidationMessageFor(model => model.DateOfInitiationForBookingNBA, "", new { @class = "text-danger" })
+                                        </div>
+                                        @Html.LabelFor(model => model.NBAStatusOfRequestId, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                        <div class="col-md-3">
+                                            @Html.DropDownListFor(m => m.NBAStatusOfRequestId, (IEnumerable<SelectListItem>)ViewData["RequestStatuses"], "-- Please Select --", new { @class = "form-control" }.DisabledIf(Model.ViewOnlyUser == true))
+                                            @Html.ValidationMessageFor(m => m.NBAStatusOfRequestId, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="form-row">
+                                        @Html.LabelFor(model => model.NBADateOfCompletion, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                        <div class="col-md-3">
+                                            @Html.EditorFor(model => model.NBADateOfCompletion, new { htmlAttributes = new { @class = "form-control date", @readOnly = "readOnly" }.DisabledIf(Model.ViewOnlyUser == true) })
+                                            @Html.ValidationMessageFor(model => model.NBADateOfCompletion, "", new { @class = "text-danger" })
+                                        </div>
+                                        @Html.LabelFor(model => model.NBAAmount, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                        <div class="col-md-3">
+                                            @Html.EditorFor(model => model.NBAAmount, new { htmlAttributes = new { @class = "form-control decimalType" }.DisabledIf(Model.ViewOnlyUser == true) })
+                                            @Html.ValidationMessageFor(model => model.NBAAmount, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="form-row">
+                                        @Html.LabelFor(model => model.NBARemarks, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                        <div class="col-md-3">
+                                            @Html.EditorFor(model => model.NBARemarks, new { htmlAttributes = new { @class = "form-control" }.DisabledIf(Model.ViewOnlyUser == true) })
+                                            @Html.ValidationMessageFor(model => model.NBARemarks, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="drtDetails" role="tabpanel" aria-labelledby="drt-details-tab">
+                                    <div class="form-row">
+                                        @Html.LabelFor(model => model.DateOfFileHandedOverToLegalForDRT, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                        <div class="col-md-3">
+                                            @Html.EditorFor(model => model.DateOfFileHandedOverToLegalForDRT, new { htmlAttributes = new { @class = "form-control date", @readOnly = "readOnly" }.DisabledIf(Model.ViewOnlyUser == true) })
+                                            @Html.ValidationMessageFor(model => model.DateOfFileHandedOverToLegalForDRT, "", new { @class = "text-danger" })
+                                        </div>
+                                        @Html.LabelFor(model => model.DateOfFilingACaseInDRT, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                        <div class="col-md-3">
+                                            @Html.EditorFor(model => model.DateOfFilingACaseInDRT, new { htmlAttributes = new { @class = "form-control date", @readOnly = "readOnly" }.DisabledIf(Model.ViewOnlyUser == true) })
+                                            @Html.ValidationMessageFor(model => model.DateOfFilingACaseInDRT, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="form-row">
+                                        @Html.LabelFor(model => model.DRTStatusOfRequestId, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                        <div class="col-md-3">
+                                            @Html.DropDownListFor(m => m.DRTStatusOfRequestId, (IEnumerable<SelectListItem>)ViewData["RequestStatuses"], "-- Please Select --", new { @class = "form-control" }.DisabledIf(Model.ViewOnlyUser == true))
+                                            @Html.ValidationMessageFor(m => m.DRTStatusOfRequestId, "", new { @class = "text-danger" })
+                                        </div>
+                                        @Html.LabelFor(model => model.DRTDateOfCompletion, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                        <div class="col-md-3">
+                                            @Html.EditorFor(model => model.DRTDateOfCompletion, new { htmlAttributes = new { @class = "form-control date", @readOnly = "readOnly" }.DisabledIf(Model.ViewOnlyUser == true) })
+                                            @Html.ValidationMessageFor(model => model.DRTDateOfCompletion, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="form-row">
+                                        @Html.LabelFor(model => model.DRTAmount, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                        <div class="col-md-3">
+                                            @Html.EditorFor(model => model.DRTAmount, new { htmlAttributes = new { @class = "form-control decimalType" }.DisabledIf(Model.ViewOnlyUser == true) })
+                                            @Html.ValidationMessageFor(model => model.DRTAmount, "", new { @class = "text-danger" })
+                                        </div>
+                                        @Html.LabelFor(model => model.DRTRemarks, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                        <div class="col-md-3">
+                                            @Html.EditorFor(model => model.DRTRemarks, new { htmlAttributes = new { @class = "form-control" }.DisabledIf(Model.ViewOnlyUser == true) })
+                                            @Html.ValidationMessageFor(model => model.DRTRemarks, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="writeoffDetails" role="tabpanel" aria-labelledby="writeoff-details-tab">
+                                    <div class="form-row">
+                                        @Html.LabelFor(model => model.DateOfInitiationForWriteOff, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                        <div class="col-md-3">
+                                            @Html.EditorFor(model => model.DateOfInitiationForWriteOff, new { htmlAttributes = new { @class = "form-control date", @readOnly = "readOnly" }.DisabledIf(Model.ViewOnlyUser == true) })
+                                            @Html.ValidationMessageFor(model => model.DateOfInitiationForWriteOff, "", new { @class = "text-danger" })
+                                        </div>
+                                        @Html.LabelFor(model => model.WriteOffStatusOfRequestId, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                        <div class="col-md-3">
+                                            @Html.DropDownListFor(m => m.WriteOffStatusOfRequestId, (IEnumerable<SelectListItem>)ViewData["RequestStatuses"], "-- Please Select --", new { @class = "form-control" }.DisabledIf(Model.ViewOnlyUser == true))
+                                            @Html.ValidationMessageFor(m => m.WriteOffStatusOfRequestId, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="form-row">
+                                        @Html.LabelFor(model => model.WriteOffDateOfCompletion, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                        <div class="col-md-3">
+                                            @Html.EditorFor(model => model.WriteOffDateOfCompletion, new { htmlAttributes = new { @class = "form-control date", @readOnly = "readOnly" }.DisabledIf(Model.ViewOnlyUser == true) })
+                                            @Html.ValidationMessageFor(model => model.WriteOffDateOfCompletion, "", new { @class = "text-danger" })
+                                        </div>
+                                        @Html.LabelFor(model => model.PrincipalOnWriteOffDate, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                        <div class="col-md-3">
+                                            @Html.EditorFor(model => model.PrincipalOnWriteOffDate, new { htmlAttributes = new { @class = "form-control decimalType" }.DisabledIf(Model.ViewOnlyUser == true) })
+                                            @Html.ValidationMessageFor(model => model.PrincipalOnWriteOffDate, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="form-row">
+                                        @Html.LabelFor(model => model.InterestOnWriteOffDate, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                        <div class="col-md-3">
+                                            @Html.EditorFor(model => model.InterestOnWriteOffDate, new { htmlAttributes = new { @class = "form-control decimalType" }.DisabledIf(Model.ViewOnlyUser == true) })
+                                            @Html.ValidationMessageFor(model => model.InterestOnWriteOffDate, "", new { @class = "text-danger" })
+                                        </div>
+                                        @Html.LabelFor(model => model.PrincipalRecoveredFromStartDateToLoanWriteOffDate, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                        <div class="col-md-3">
+                                            @Html.EditorFor(model => model.PrincipalRecoveredFromStartDateToLoanWriteOffDate, new { htmlAttributes = new { @class = "form-control decimalType" }.DisabledIf(Model.ViewOnlyUser == true) })
+                                            @Html.ValidationMessageFor(model => model.PrincipalRecoveredFromStartDateToLoanWriteOffDate, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="form-row">
+                                        @Html.LabelFor(model => model.InterestRecoveredFromStartDateToLoanWriteOffDate, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                        <div class="col-md-3">
+                                            @Html.EditorFor(model => model.InterestRecoveredFromStartDateToLoanWriteOffDate, new { htmlAttributes = new { @class = "form-control decimalType" }.DisabledIf(Model.ViewOnlyUser == true) })
+                                            @Html.ValidationMessageFor(model => model.InterestRecoveredFromStartDateToLoanWriteOffDate, "", new { @class = "text-danger" })
+                                        </div>
+                                        @Html.LabelFor(model => model.InterestOnInterestRecoveredFromStartDateToLoanWriteOffDate, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                        <div class="col-md-3">
+                                            @Html.EditorFor(model => model.InterestOnInterestRecoveredFromStartDateToLoanWriteOffDate, new { htmlAttributes = new { @class = "form-control decimalType" }.DisabledIf(Model.ViewOnlyUser == true) })
+                                            @Html.ValidationMessageFor(model => model.InterestOnInterestRecoveredFromStartDateToLoanWriteOffDate, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="form-row">
+                                        @Html.LabelFor(model => model.PenalAmountRecoveredFromStartDateToLoanWriteOffDate, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                        <div class="col-md-3">
+                                            @Html.EditorFor(model => model.PenalAmountRecoveredFromStartDateToLoanWriteOffDate, new { htmlAttributes = new { @class = "form-control decimalType" }.DisabledIf(Model.ViewOnlyUser == true) })
+                                            @Html.ValidationMessageFor(model => model.PenalAmountRecoveredFromStartDateToLoanWriteOffDate, "", new { @class = "text-danger" })
+                                        </div>
+                                        @Html.LabelFor(model => model.WriteOffNextActionToBeTaken, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                        <div class="col-md-3">
+                                            @Html.EditorFor(model => model.WriteOffNextActionToBeTaken, new { htmlAttributes = new { @class = "form-control" }.DisabledIf(Model.ViewOnlyUser == true) })
+                                            @Html.ValidationMessageFor(model => model.WriteOffNextActionToBeTaken, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="form-row">
+                                        @Html.LabelFor(model => model.WriteOffDueDateOfNextAction, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                        <div class="col-md-3">
+                                            @Html.EditorFor(model => model.WriteOffDueDateOfNextAction, new { htmlAttributes = new { @class = "date form-control", @readOnly = "readOnly" }.DisabledIf(Model.ViewOnlyUser == true) })
+                                            @Html.ValidationMessageFor(model => model.WriteOffDueDateOfNextAction, "", new { @class = "text-danger" })
+                                        </div>
+                                        @Html.LabelFor(model => model.WriteOffRemarks, htmlAttributes: new { @class = "control-label col-md-3 required" })
+                                        <div class="col-md-3">
+                                            @Html.EditorFor(model => model.WriteOffRemarks, new { htmlAttributes = new { @class = "form-control" }.DisabledIf(Model.ViewOnlyUser == true) })
+                                            @Html.ValidationMessageFor(model => model.WriteOffRemarks, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @if (!Model.ViewOnlyUser)
+                    {
+                        <hr />
+                        <div class="form-row">
+                            <div class="col-md-offset-2 col-md-1">
+                                <input type="submit" value="Save" class="btn btn-info" />
+                            </div>
+                            <div class="col-md-offset-2 col-md-3">
+                                <input type="button" value="Clear/Reset" onclick="if (confirm('Do you want to clear all the input data?')) { window.location.href = '/NPAManagement/NPAManagementEdit?npaManagementId=@Model.NPAManagementId'; }" class="btn btn-default" />
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div>
+    @Html.ActionLink("Back to List", "NPAManagementList")
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/Custom/npaManagementMain.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //For Individual Borrower Detail
+            if ('@Model.StringifiedBorrowerTypeIndividualLegalDetail' != null) {
+                var parsedDetail = JSON.parse('@(Model.StringifiedBorrowerTypeIndividualLegalDetail)'.replace(/&quot;/g, '"').replace(/&#39;/g, "'"));
+                var urlValue = "";
+                if ($("#BorrowerTypeId").val() === "1") {
+                    urlValue = "/NPAManagement/GetIndividualBorrowerDetailForEdit?unparsedDetail=" + encodeURIComponent(JSON.stringify(parsedDetail)) + "&viewOnlyUser=" + '@Model.ViewOnlyUser';
+                }
+                else if ($("#BorrowerTypeId").val() === "2") {
+                    urlValue = "/NPAManagement/GetLegalEntityBorrowerDetailForEdit?unparsedDetail=" + encodeURIComponent(JSON.stringify(parsedDetail)) + "&viewOnlyUser=" + '@Model.ViewOnlyUser';
+                }
+                if (urlValue !== "") {
+                    $.ajax({
+                        url: urlValue,
+                        contentType: 'application/html; charset=utf-8',
+                        type: 'GET',
+                        dataType: 'html',
+                        async: false,
+                        success: function (result) {
+                            $('#BorrowerDetailSection').html(result.replace(/&amp;/g, '&'));
+                            var form = $("#formNPA")
+                                .removeData("validator") /* added by the raw jquery.validate plugin */
+                                .removeData("unobtrusiveValidation");  /* added by the jquery unobtrusive plugin*/
+
+                            $.validator.unobtrusive.parse("#formNPA");
+                        },
+                        error: function (xhr, status) { alert(status); }
+                    });
+                }
+                else {
+                    $('#BorrowerDetailSection').html('');
+                }
+            }
+
+            if ('@(Model.StringifiedListOfPrimaryCollateralDetailObjects)' != null && '@(Model.StringifiedListOfPrimaryCollateralDetailObjects)' != '[]' && '@(Model.StringifiedListOfPrimaryCollateralDetailObjects)' != '' && '@(Model.StringifiedListOfPrimaryCollateralDetailObjects)' != '[{}]') {
+            var unparsedPrimaryCollateralsList = ('@(Model.StringifiedListOfPrimaryCollateralDetailObjects)').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+            var parsedDetail = JSON.parse(unparsedPrimaryCollateralsList);
+                $.each(parsedDetail, function () {
+                    if (JSON.stringify($(this)[0]) !== '{"CollateralTypeId":""}') {
+                        var urlValue = "/NPAManagement/GetPrimaryCollateralPanelForEdit?unparsedDetail=" + encodeURIComponent(JSON.stringify($(this)[0])) + "&viewOnlyUser=" + '@Model.ViewOnlyUser';
+                        if (urlValue !== "") {
+                            $.ajax({
+                                url: urlValue,
+                                contentType: 'application/html; charset=utf-8',
+                                type: 'GET',
+                                dataType: 'html',
+                                async: false,
+                                success: function (result) {
+                                    $('#dvPrimaryCollaterals').append(result.replace(/&amp;/g, '&'));
+                                    var form = $("#formNPA")
+                                        .removeData("validator") /* added by the raw jquery.validate plugin */
+                                        .removeData("unobtrusiveValidation");  /* added by the jquery unobtrusive plugin*/
+
+                                    $.validator.unobtrusive.parse("#formNPA");
+                                },
+                                error: function (xhr, status) { alert(status); }
+                            });
+                        }
+                    }
+                });
+        }
+
+        if ('@(Model.StringifiedListOfSecondaryCollateralDetailObjects)' !=null && '@(Model.StringifiedListOfSecondaryCollateralDetailObjects)' !='[]' && '@(Model.StringifiedListOfSecondaryCollateralDetailObjects)' !='' && '@(Model.StringifiedListOfSecondaryCollateralDetailObjects)' !='[{}]') {
+            var unparsedSecondaryCollateralsList = ('@(Model.StringifiedListOfSecondaryCollateralDetailObjects)').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+            var parsedDetail = JSON.parse(unparsedSecondaryCollateralsList);
+            $.each(parsedDetail, function () {
+                if (JSON.stringify($(this)[0])!=='{"CollateralTypeId":""}') {
+                    var urlValue = "/NPAManagement/GetSecondaryCollateralPanelForEdit?unparsedDetail=" + encodeURIComponent(JSON.stringify($(this)[0])) + "&viewOnlyUser=" + '@Model.ViewOnlyUser';
+                    if (urlValue !== "") {
+                        $.ajax({
+                            url: urlValue,
+                            contentType: 'application/html; charset=utf-8',
+                            type: 'GET',
+                            dataType: 'html',
+                            async: false,
+                            success: function (result) {
+                                $('#dvSecondaryCollaterals').append(result);
+                                var form = $("#formNPA")
+                                    .removeData("validator") /* added by the raw jquery.validate plugin */
+                                    .removeData("unobtrusiveValidation");  /* added by the jquery unobtrusive plugin*/
+
+                                $.validator.unobtrusive.parse("#formNPA");
+                            },
+                            error: function (xhr, status) { alert(status); }
+                        });
+                    }
+                }
+                });
+            }
+
+            if ('@Model.StringifiedListOfLoanAccountDetailObjects' !=null && '@Model.StringifiedListOfLoanAccountDetailObjects' !='[]' && '@Model.StringifiedListOfBranchFollowUpDetailObjects' !='' && '@Model.StringifiedListOfLoanAccountDetailObjects' !='[{}]') {
+                var unparsedDetail = '@(Model.StringifiedListOfLoanAccountDetailObjects)'.replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, "&");
+                var parsedDetail = JSON.parse(unparsedDetail);
+                $.each(parsedDetail, function () {
+                    var stringifiedJSON = JSON.stringify($(this)[0]);
+                    var urlValue = "/NPAManagement/GetLoanAccountDetailForEdit?unparsedDetail=" + encodeURIComponent(stringifiedJSON) + "&viewOnlyUser=" + '@Model.ViewOnlyUser';
+                    if (urlValue !== "") {
+                        $.ajax({
+                            url: urlValue,
+                            contentType: 'application/html; charset=utf-8',
+                            type: 'GET',
+                            async : false,
+                            dataType: 'html',
+                            cache: false,
+                            success: function (result) {
+                                $('#dvLoanDetails').append(result);
+                                var form = $("#formNPA")
+                                    .removeData("validator") /* added by the raw jquery.validate plugin */
+                                    .removeData("unobtrusiveValidation");  /* added by the jquery unobtrusive plugin*/
+
+                                $.validator.unobtrusive.parse("#formNPA");
+                            },
+                            error: function (xhr, status) { alert(status); }
+                        });
+                    }
+                });
+            }
+
+            if ('@Model.StringifiedListOfBranchFollowUpDetailObjects' !=null && '@Model.StringifiedListOfBranchFollowUpDetailObjects' !='[]' && '@Model.StringifiedListOfBranchFollowUpDetailObjects' !='' && '@Model.StringifiedListOfBranchFollowUpDetailObjects' !='[{}]') {
+                debugger;
+                var parsedDetail = JSON.parse('@(Model.StringifiedListOfBranchFollowUpDetailObjects)'.replace(/&quot;/g, '"').replace(/&#39;/g, "'"));
+                $.each(parsedDetail, function () {
+                    var urlValue = "/NPAManagement/GetFollowUpPanelForEditForBranchFollowUp?unparsedDetail=" + encodeURIComponent(JSON.stringify($(this)[0])) + "&userRole=" + '@Model.LoggedInUserType'+ "&viewOnlyUser=" + '@Model.ViewOnlyUser';
+                    if (urlValue !== "") {
+                        $.ajax({
+                            url: urlValue,
+                            contentType: 'application/html; charset=utf-8',
+                            type: 'GET',
+                            async: false,
+                            dataType: 'html',
+                            success: function (result) {
+                                $('#dvBranchFollowUps').append(result);
+                                var form = $("#formNPA")
+                                    .removeData("validator") /* added by the raw jquery.validate plugin */
+                                    .removeData("unobtrusiveValidation");  /* added by the jquery unobtrusive plugin*/
+
+                                $.validator.unobtrusive.parse("#formNPA");
+                            },
+                            error: function (xhr, status) { alert(status); }
+                        });
+                    }
+                });
+            }
+
+            if ('@Model.StringifiedListOfSACFollowUpDetailObjects' != null && '@Model.StringifiedListOfSACFollowUpDetailObjects' != '[]' && '@Model.StringifiedListOfSACFollowUpDetailObjects' != '' && '@Model.StringifiedListOfSACFollowUpDetailObjects' != '[{}]') {
+                debugger;
+                var parsedDetail = JSON.parse('@(Model.StringifiedListOfSACFollowUpDetailObjects)'.replace(/&quot;/g, '"').replace(/&#39;/g, "'"));
+                $.each(parsedDetail, function () {
+                    var urlValue = "/NPAManagement/GetFollowUpPanelForEditForSACFollowUp?unparsedDetail=" + encodeURIComponent(JSON.stringify($(this)[0])) + "&userRole=" + '@Model.LoggedInUserType'+ "&viewOnlyUser=" + '@Model.ViewOnlyUser';
+                    if (urlValue !== "") {
+                        $.ajax({
+                            url: urlValue,
+                            contentType: 'application/html; charset=utf-8',
+                            type: 'GET',
+                            async: false,
+                            dataType: 'html',
+                            success: function (result) {
+                                $('#dvSACFollowUps').append(result);
+                                var form = $("#formNPA")
+                                    .removeData("validator") /* added by the raw jquery.validate plugin */
+                                    .removeData("unobtrusiveValidation");  /* added by the jquery unobtrusive plugin*/
+
+                                $.validator.unobtrusive.parse("#formNPA");
+                            },
+                            error: function (xhr, status) { alert(status); }
+                        });
+                    }
+                });
+            }
+
+            $('.decimalType').toArray().forEach(function (field) {
+                new Cleave(field, {
+                    numeral: true,
+                    numeralThousandsGroupStyle: 'thousand'
+                });
+            });
+
+            $(".addNewRowPrimaryCollateral").off().on("click", function () {
+                var typeId = $(this).data("type-id");
+                var divIdToAddTo = $(this).data("target");
+                var urlValue = "/NPAManagement/GetCollateralAddPanel?collateralClass=" + typeId;
+                if (urlValue !== "") {
+                    $.ajax({
+                        url: urlValue,
+                        contentType: 'application/html; charset=utf-8',
+                        type: 'GET',
+                        dataType: 'html',
+                        async: false,
+                        success: function (result) {
+                            $('#' + divIdToAddTo).append(result);
+                            var form = $("#formNPA")
+                                .removeData("validator") /* added by the raw jquery.validate plugin */
+                                .removeData("unobtrusiveValidation");  /* added by the jquery unobtrusive plugin*/
+
+                            $.validator.unobtrusive.parse("#formNPA");
+                        },
+                        error: function (xhr, status) { alert(status); }
+                    });
+                }
+                else {
+                    $('#' + divIdToAddTo).html('');
+                }
+            });
+
+            $(".addNewRowSecondaryCollateral").off().on("click", function () {
+                var typeId = $(this).data("type-id");
+                var divIdToAddTo = $(this).data("target");
+                var urlValue = "/NPAManagement/GetCollateralAddPanel?collateralClass=" + typeId;
+                if (urlValue !== "") {
+                    $.ajax({
+                        url: urlValue,
+                        contentType: 'application/html; charset=utf-8',
+                        type: 'GET',
+                        dataType: 'html',
+                        async: false,
+                        success: function (result) {
+                            $('#' + divIdToAddTo).append(result);
+                            var form = $("#formNPA")
+                                .removeData("validator") /* added by the raw jquery.validate plugin */
+                                .removeData("unobtrusiveValidation");  /* added by the jquery unobtrusive plugin*/
+
+                            $.validator.unobtrusive.parse("#formNPA");
+                        },
+                        error: function (xhr, status) { alert(status); }
+                    });
+                }
+                else {
+                    $('#' + divIdToAddTo).html('');
+                }
+            });
+        });
+    </script>
+}
